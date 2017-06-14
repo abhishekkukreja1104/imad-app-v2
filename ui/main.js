@@ -14,7 +14,7 @@ span.innerHTML=counter.toString();
 
         }
     }
-};
+}
 request.open("GET","https://cloud.imad.hasura.io/counter",true);
   request.send(null);
   
