@@ -29,7 +29,7 @@ var pool = new Pool(config);
          else 
              res.send(JSON.string(fy(result.rows)));
              app.get('/articles/:articleName',function(req, res){
-                 pool.query("SELECTB*FROM article WHERE title=" +req.params.articleName, function(req, res){
+                 pool.query("SELECTB*FROM article WHERE title='"+ req.params.articleName +"'",function(err,result){
                      if(err)
                      {
                          res.status(500).send(err.toString());
