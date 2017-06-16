@@ -27,7 +27,7 @@ var pool = new Pool(config);
              
          }
          else{
-             res.send(JSON.string(fy(result)))
+             res.send(JSON.string(fy(result)));
 }
      };
      res.sendFile(path.join(__dirname, 'ui','index.html'));
