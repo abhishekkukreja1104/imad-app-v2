@@ -25,11 +25,31 @@ var pool = new Pool(config);
          {
              res.status(500).send(err.toString());
              
-         }
-         else{
+         } 
+         else 
              res.send(JSON.string(fy(result.rows)));
-}
-     };
+             app.get('/articles/:articleName',function(req, res){
+                 pool.query("SELECTB*FROM article WHERE title=" +req.params.articleName, function(req, res){
+                     if(err)
+                     {
+                         res.status(500).send(err.toString());
+                         
+                     }else{
+                         if(result.rows.length===0)
+                         {
+                             res.status(404).send('article not found');
+                             }else{
+                                 var articleData=result.rows[0];
+                                 
+                                 res.send(createTemplate(articleData));
+                                 
+                              
+                             }
+                     }
+                 });
+             
+
+    
      res.sendFile(path.join(__dirname, 'ui','index.html'));
  });
 
