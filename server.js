@@ -8,7 +8,7 @@ var config = {
     host: 'db.imad.hasura-app.io',
     port: '5432',
     password: process.env.DB_PASSWORD
-}
+};
 
 var app = express();
 app.use(morgan('combined'));
@@ -28,8 +28,8 @@ var pool = new Pool(config);
          }
          else{
              res.send(JSON.string(fy(result)))
-         }
-     }
+}
+     };
      res.sendFile(path.join(__dirname, 'ui','index.html'));
  });
 
