@@ -14,13 +14,78 @@ var config = {
 var app = express();
 app.use(morgan('combined'));
 
-function createTemplate (data) {
-    
-} 
+var articles = {
+        'article-one': {
+         title: 'Article One | Harminder Singh',
+         heading: 'Article One',
+         date: 'June 12,2017',
+         content: ` 
+             <p>
+                this is the article for my first article. this is the article for my first article.this is the article for my first article.
+            </p>
+             <p>
+                this is the article for my first article. this is the article for my first article.this is the article for my first article.
+            </p>
+             <p>
+                this is the article for my first article. this is the article for my first article.this is the article for my first article.
+            </p>`
+        },
+        'article-two': {title: 'Article Two | Harminder Singh',
+         heading: 'Article Two',
+         date: 'June 15,2017',
+         content: ` 
+             <p>
+                this is the article for my second article.
+            </p>`},
+        'article-three': {title: 'Article Three | Harminder Singh',
+         heading: 'Article Three',
+         date: 'June 20,2017',
+         content: ` 
+             <p>
+                this is the article for my three article.
+            </p>`}
+        };
 
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'ui', 'index.html'));
-});
+function createTemplate (data) {
+    var title = data.title;
+    var date = data.date;
+    var heading = data.heading;
+    var content = data.content;
+    var htmlTemplate = `
+               <html>
+        <head>
+            <title>
+                ${title}
+            </title>
+            <meta name="viewport" content="device-width,initial-scale=1" />
+             <link href="/ui/style.css" rel="stylesheet" />
+           
+        </head>
+        <body>
+            <div class="container">
+             <div>
+                <a href="/">Home</a>
+             </div>
+             <hr/>
+             <h3>
+                ${heading}
+              </h3>
+              <div>
+              ${date}
+              </div>
+              <div>
+                 ${content}
+              </div>
+            </div>
+        </body>
+        </html>
+        `;
+        return htmlTemplate;
+}
+
+
+
+
 function hash (input, salt) {
     var hashed = crypto.pbkdf2Sync(input, salt, 10000, 512, 'sha512 ');
     return hashed.toString('hex');
@@ -65,21 +130,36 @@ var pool = new Pool(config);
     
      res.sendFile(path.join(__dirname, 'ui','index.html'));
  });
+ 
+ app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'ui', 'index.html'));
+});
 
 var counter=0;
 app.get('/counter', function(req, res){
     counter=counter+1;
     res.send(counter.toString());
 });
-  app.get('/article-one', function(req, res){
-       res.sendFile(path.join(__dirname, 'ui', 'article-one.html'));
-  });
-     app.get('/article-two', function(req, res){
-      res.send('article two requested and will be served here');  
-});
- app.get('/article-three', function(req, res){
-      res.send('article three requested and will be served here');
+
+  var names= [];
+        app.get('/submit-name',function(rq,res) { //URL: /submit-name?name=xxxxxx
+            //Get the name from the request
+            var name = req.params.name;
+            
+            names.push(name);
+            //JSON: Java Script Object Notation
+            res.send(JSON.stringify(name));
+        });
+
+    app.get('/:articleName', function (req, res){
+      // articleName == article-one
+      // articles[articleName] == content object for article one
+      var articleName = req.params.articleName;
+      res.send(createTemplate(articles[articleName]));
  });
+
+
+
 app.get('/ui/style.css', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'style.css'));
 });
